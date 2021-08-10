@@ -117,8 +117,8 @@ resource "azurerm_virtual_machine_extension" "CustomScript" {
  SETTINGS
    protected_settings = <<PROTECTED_SETTINGS
      {
-        "commandToExecute": "bash prepare_lvmdisks.sh",
-        "fileUris": ["https://vmtfbackend01.blob.core.windows.net/scripts/prepare_lvmdisks.sh"]
+        "commandToExecute": "bash prepare_disks.sh",
+        "fileUris": ["https://vmtfbackend01.blob.core.windows.net/scripts/prepare_disks.sh"]
      }
  PROTECTED_SETTINGS
  

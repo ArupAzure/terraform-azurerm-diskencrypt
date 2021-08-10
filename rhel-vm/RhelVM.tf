@@ -80,7 +80,7 @@ resource "azurerm_virtual_machine" "vm" {
   dynamic storage_data_disk {
     for_each = range(var.nbof_data_disk)
     content {
-      name              = "${local.server_name}0${count.index + 1}-ddisk0${storage_data_disk.value +1}"      
+      name              = "${var.vm_name}-ddisk0${storage_data_disk.value +1}"      
       create_option     = "Empty"
       lun               = storage_data_disk.value
       disk_size_gb      = var.mddisk_size

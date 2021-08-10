@@ -65,11 +65,11 @@ resource "azurerm_virtual_machine" "vm" {
   network_interface_ids = [azurerm_network_interface.private_nic.id]
   vm_size               = var.vm_sku_type
 
-  source_image_reference {
-    publisher = "RedHat"
-    offer     = "RHEL"
-    sku       = "7_9"
-    version   = "latest"
+  storage_image_reference {
+      publisher = "RedHat"
+      offer     = "RHEL"
+      sku       = "7_9"
+      version   = "latest"
   }
   storage_os_disk {
     name              = "${var.vm_name}-osdisk"
@@ -96,7 +96,8 @@ resource "azurerm_virtual_machine" "vm" {
     disable_password_authentication = false
   }
   boot_diagnostics {
-    storage_uri = var.diag_storage_name
+      enabled     = "true"
+      storage_uri = var.diag_storage_name
   }
   tags = var.tags
 }

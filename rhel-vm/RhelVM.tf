@@ -2,6 +2,10 @@
 # Developed by Tunga Mallikarjuna Reddy
 ###############################################################################
 
+# Generate random text for a unique Public IP name
+resource "random_id" "randomId" {
+    byte_length = 5
+}
 # Read and Load Vnet Info
 data "azurerm_virtual_network" "vnet" {
   name                = var.vnet_name
@@ -27,7 +31,7 @@ data "azurerm_key_vault_key" "key" {
 }
 # Create public IPs
 resource "azurerm_public_ip" "public_ip" {
-    name                         = "MSFTReactor"
+    name                         = "Arjun${random_id.randomId.hex}"
     location                     = var.location_name
     resource_group_name          = var.vm_rg_name
     allocation_method            = "Dynamic"

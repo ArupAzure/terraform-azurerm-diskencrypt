@@ -1,24 +1,16 @@
-# terraform-azurerm-compute
+# terraform-azurerm-diskencrypt
 
-## Deploys 1+ Virtual Machines to your provided VNet/Subnet
+[![Build Status](https://travis-ci.org/Azure/terraform-azurerm-diskencrypt.svg?branch=master)](https://travis-ci.org/Azure/terraform-azurerm-diskencrypt)
 
-This Terraform deploys Virtual Machines in Azure with the following characteristics:
+## Encrypt an existing  Virtual Machine in Azure
+This module implements Azure Disk Encryption feature to encrypt currently running VM's.  ADE leverages the industry standard BitLocker feature of Windows and DM-Crypt feature of linux to provide volume encryption for the OS and data disks.
 
-- Ability to specify Azure Market place image, by specifying `var.os_mk_img_*`. Retrive the list of [latest marketplace image Using Azure Cli](https://docs.microsoft.com/cli/azure/vm/image?view=azure-cli-latest) 
-- All VMs use [managed disks](https://azure.microsoft.com/services/managed-disks/) 
-- VM nics attached to a single virtual network subnet of your choice
-- Control the number of Public IP addresses assigned to VMs via `var.public_ip_required=true`. Create and attach one Public IP per VM up to the number of VMs or create NO public IPs via setting `var.public_ip_required=false`
-- Control VM SKU `var.vm_sku_type`.
-- Boot diagnostics is enabled.
-- Additional tags are added to VM
-- OS disk is deleted upon deletion of the VM
-- Add one managed data disk or none
-- Public IP addresses (one for each VM)
-- Public IP Addresses allocation method is Static and SKU is Standard
-- Using port 3389 for RDP access using the password as shown
-- `var.nb_of_ddisk` Number of the data disks attached to each virtual machine
+## prerequisites
+All the prerequsites can be found at the [Azure Disk Encryption prerequisites](https://docs.microsoft.com/en-us/azure/security/azure-security-disk-encryption-prerequisites)
 
-**> Note: Pre requisites to create a VM. 1) VM resourceGroup 2) Storage Account 3) Virtual Network 4) Subnet 5) Network Security Group (NSG)**
+**Setting the [Advanced access policies](https://docs.microsoft.com/en-us/azure/security/azure-security-disk-encryption-prerequisites#bkmk_KVper) for the Key Vault is required for this module to work.** 
+
+** [Important Note](https://docs.microsoft.com/en-us/azure/security/azure-security-disk-encryption-linux) We need to enable disk backup to encrypt managed data disks. **
 
 ## Usage in Terraform 1.0.4
 ```hcl

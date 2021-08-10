@@ -1,4 +1,4 @@
-vm_name     = "RHELVMMSFT"
+vm_name     = "RHELVMREACT"
 vm_rg_name  = "common-rg"
 nw_rg_name  = "network-rg"
 vnet_name   = "corp-vnet-01"

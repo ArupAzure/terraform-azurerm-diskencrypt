@@ -5,9 +5,9 @@ vnet_name   = "corp-vnet-01"
 subnet_name = "WinSubnet01"
 
 location_name             = "westeurope"
-disk_encryption_required  = "false"
+disk_encryption_required  = "true"
 nbof_data_disk            = "2"
-ddisk_mount_required      = "false"
+ddisk_mount_required      = "true"
 
 vm_sku_type = "Standard_D2S_V3"
 osdisk_type = "Premium_LRS"

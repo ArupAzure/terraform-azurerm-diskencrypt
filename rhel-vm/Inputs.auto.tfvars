@@ -1,4 +1,4 @@
-vm_name     = "RH"
+vm_name     = "RHELVMMSFT"
 vm_rg_name  = "common-rg"
 nw_rg_name  = "network-rg"
 vnet_name   = "corp-vnet-01"
@@ -6,7 +6,7 @@ subnet_name = "WinSubnet01"
 
 location_name             = "westeurope"
 disk_encryption_required  = "false"
-nbof_data_disk            = "1"
+nbof_data_disk            = "2"
 ddisk_mount_required      = "false"
 
 vm_sku_type = "Standard_D2S_V3"

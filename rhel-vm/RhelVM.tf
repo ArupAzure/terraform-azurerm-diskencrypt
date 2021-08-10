@@ -103,7 +103,7 @@ resource "azurerm_virtual_machine" "vm" {
 }
 # Run Custom Script Post VM Creation
 resource "azurerm_virtual_machine_extension" "CustomScript" {
-  count                         = var.ddisk_mount_required == "true" ? var.node_count : 0
+  count                         = var.ddisk_mount_required == "true" ? 1 : 0
   name                          = "customScript"
   virtual_machine_id            = azurerm_virtual_machine.vm.id
   publisher                     = "Microsoft.Azure.Extensions"
@@ -133,7 +133,7 @@ resource "null_resource" "sleep_3M" {
 }
 # Run Azure Disk Encryption Post VM Custom Script Execution
 resource "azurerm_virtual_machine_extension" "RhelAde" {
-  count                        = var.disk_encryption_required == "true" ? var.node_count : 0
+  count                        = var.disk_encryption_required == "true" ? 1 : 0
   name                         = "LinuxDiskEncryption"
   virtual_machine_id           = azurerm_virtual_machine.vm.id
   publisher                    = "Microsoft.Azure.Security"

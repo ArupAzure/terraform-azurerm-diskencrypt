@@ -1,0 +1,134 @@
+trigger:
+  branches:    
+    include:
+      - 'main'
+  paths:
+    exclude:
+      - '*'
+    include:
+      - 'rhel-vm/*'
+
+variables:
+  - name: tfversion
+    value: '1.0.4'
+  - name: tfwdir
+    value: 'rhel-vm'
+  - name: tfplan
+    value: 'rhel-vm.tfplan'
+  - name: builddir
+    value: 'rhel-vm'
+
+parameters:
+- name: image
+  displayName: Pool Image
+  type: string
+  default: 'vs2017-win2016'
+  values:
+  - windows-latest
+  - vs2017-win2016
+  - ubuntu-latest
+  - ubuntu-16.04
+  - ubuntu-18.04
+  - macOS-latest
+  - macOS-10.14
+
+pool:
+  vmImage: vs2017-win2016
+resources:
+  repositories:
+  - repository: self
+
+stages:
+- stage: VMPlan
+  jobs:
+    - job:
+      displayName: Rhel-VM-Plan
+      pool:
+         vmImage: 'vs2017-win2016'      
+      steps:
+      - task: AzureKeyVault@1
+        inputs:
+          azureSubscription: 'VSES-SVC'
+          KeyVaultName: 'weuvmsecrets-kv01'
+          SecretsFilter: '*'
+          RunAsPreJob: false
+        displayName: "TF Secrets"
+      - task: 'charleszipp.azure-pipelines-tasks-terraform.azure-pipelines-tasks-terraform-installer.TerraformInstaller@0'
+        inputs:
+          terraformVersion: '$(tfversion)'
+        displayName: TF Install
+      - task: Bash@3
+        displayName: TF Init
+        env:
+          ARM_CLIENT_ID: $(CLIENT-ID)
+          ARM_CLIENT_SECRET: $(CLIENT-SECRET)
+          ARM_TENANT_ID: $(TENANT-ID)
+        inputs:
+          targetType: inline
+          script: |
+            cd $(tfwdir); ls -lrt;
+            terraform init -no-color
+      - task: Bash@3
+        displayName: TF Validate
+        inputs:
+          targetType: inline
+          script: |
+            cd $(tfwdir);
+            terraform validate -no-color
+      - task: Bash@3
+        displayName: TF Plan
+        env:
+          ARM_CLIENT_ID: $(CLIENT-ID)
+          ARM_CLIENT_SECRET: $(CLIENT-SECRET)
+          ARM_TENANT_ID: $(TENANT-ID)
+        inputs:
+          targetType: inline
+          script: |
+            cd $(tfwdir);
+            terraform plan -no-color
+- stage: VMDeploy
+  jobs:
+  - deployment: RhelVMDeploy
+    displayName: Rhel-VM-Deploy
+    pool:
+      vmImage: 'vs2017-win2016'
+    environment:
+      name: 'prod'
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - checkout: self
+          - task: AzureKeyVault@1
+            inputs:
+              azureSubscription: 'VSES-SVC'
+              KeyVaultName: 'weuvmsecrets-kv01'
+              SecretsFilter: '*'
+              RunAsPreJob: true
+            displayName: TF Secrets
+          - task: 'charleszipp.azure-pipelines-tasks-terraform.azure-pipelines-tasks-terraform-installer.TerraformInstaller@0'
+            inputs:
+              terraformVersion: '$(tfversion)'
+            displayName: TF Install
+          - task: Bash@3
+            displayName: TF Init
+            env:
+              ARM_CLIENT_ID: $(CLIENT-ID)
+              ARM_CLIENT_SECRET: $(CLIENT-SECRET)
+              ARM_TENANT_ID: $(TENANT-ID)
+            inputs:
+              targetType: inline
+              script: |
+                cd $(tfwdir); ls -lrt;
+                terraform init -no-color
+          - task: Bash@3
+            displayName: TF Apply
+            env:
+              ARM_CLIENT_ID: $(CLIENT-ID)
+              ARM_CLIENT_SECRET: $(CLIENT-SECRET)
+              ARM_TENANT_ID: $(TENANT-ID)
+            inputs:
+              targetType: inline
+              script: |
+                cd $(tfwdir)
+                terraform apply -no-color -auto-approve

@@ -6,7 +6,7 @@ subnet_name = "WinSubnet01"
 
 location_name             = "westeurope"
 disk_encryption_required  = "true"
-nbof_data_disk            = "2"
+nbof_data_disk            = "1"
 ddisk_mount_required      = "true"
 
 vm_sku_type = "Standard_D2S_V3"

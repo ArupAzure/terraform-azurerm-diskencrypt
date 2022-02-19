@@ -1,4 +1,10 @@
 # Universal Windows Platform
+- task: CmdLine@2
+  inputs:
+    script: |
+      echo Write your commands here
+      
+      echo Hello world
 # Build a Universal Windows Platform project using Visual Studio.
 # Add steps that test and distribute an app, save build artifacts, and more:
 # https://aka.ms/yaml
